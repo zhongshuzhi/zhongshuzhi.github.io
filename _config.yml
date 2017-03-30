@@ -8,11 +8,10 @@ keyword: "钟书智,Android,海善达"
 url: ""              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
-
 # SNS settings
 RSS: false
 #weibo_username:     huxpro
-zhihu_username:     542481524@qq.com
+zhihu_username:     zhong-shu-47
 github_username:    zhongshuzhi
 #twitter_username:  huxpro
 #facebook_username:  huxpro
@@ -68,7 +67,7 @@ kramdown:
 
 
 # Sidebar settings
-sidebar: true                           # whether or not using Sidebar.
+sidebar: false                           # whether or not using Sidebar.
 sidebar-about-description: "写写代码，想想问题，<br>从编程中得到快乐"
 sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
