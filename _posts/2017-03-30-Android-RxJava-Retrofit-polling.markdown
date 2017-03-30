@@ -4,7 +4,7 @@ title:      "Android RxJava + Retrofit 实现网络请求的轮询"
 subtitle:   "Android RxJava + Retrofit Leaning"
 date:       2017-03-30
 author:     "Zhongshuzhi"
-header-img: "img/post-bg-pwd.jpg"
+header-img: "img/post-bg-rwd.jpg"
 tags:
     - Android
 ---
