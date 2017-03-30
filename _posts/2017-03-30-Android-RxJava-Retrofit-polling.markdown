@@ -1,4 +1,3 @@
-
 ---
 layout:     post
 title:      "Android RxJava + Retrofit 实现网络请求的轮询"
