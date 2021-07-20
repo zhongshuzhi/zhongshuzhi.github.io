@@ -44,7 +44,7 @@
 
    - Abbreviation 填写 `*`
 
-   - Description 填写 `Custom comments for method in fcloud projects`
+   - Description 填写 `Custom comments for method in your projects(可自行填写)`
 
    - Template text 填写
 
