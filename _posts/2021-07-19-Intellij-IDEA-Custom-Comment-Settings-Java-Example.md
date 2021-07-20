@@ -26,7 +26,7 @@
 
 3. 实际效果如图所示
 
-   ![image-20210719230751775](C:\Users\ZSZ\AppData\Roaming\Typora\typora-user-images\image-20210719230751775.png)
+   ![NG7TF.png](https://e.im5i.com/2021/07/20/NG7TF.png)
 
 4. 保存（Apply），此时类注释已设置完成
 
@@ -38,7 +38,7 @@
 
 2. 点击右侧+号，添加Template Group，命名为userDefine，如图所示
 
-   ![image-20210719230852291](C:\Users\ZSZ\AppData\Roaming\Typora\typora-user-images\image-20210719230852291.png)
+   ![NG9ed.png](https://e.im5i.com/2021/07/20/NG9ed.png)
 
 3. 点击右侧+号，添加Live Templates，
 
@@ -61,9 +61,11 @@
      
      - expand with下拉框选择**Enter**（回车键）
 
+   * 下方**No Applicable contexts**字样处，点击右方**Define**按钮，选中**Java**
+
    整体配置如图所示
 
-   ![image-20210719231002773](C:\Users\ZSZ\AppData\Roaming\Typora\typora-user-images\image-20210719231002773.png)
+   ![NGSuK.png](https://e.im5i.com/2021/07/20/NGSuK.png)
 
 4. 此时若一切正常，edit variables应处于可点击的状态，点击，修改变量表达式（Expression）
 
@@ -89,7 +91,7 @@
 
    整体效果如图所示
 
-   ![image-20210719231107279](C:\Users\ZSZ\AppData\Roaming\Typora\typora-user-images\image-20210719231107279.png)
+   ![NGzmw.png](https://e.im5i.com/2021/07/20/NGzmw.png)
 
 5. 保存（Apply），此时方法体注释已自定义完成
 
@@ -105,7 +107,7 @@
 
 - 整体效果如图所示
 
-  ![image-20210719231234784](C:\Users\ZSZ\AppData\Roaming\Typora\typora-user-images\image-20210719231234784.png)
+  ![NGb6Y.png](https://e.im5i.com/2021/07/20/NGb6Y.png)
 
 
 
