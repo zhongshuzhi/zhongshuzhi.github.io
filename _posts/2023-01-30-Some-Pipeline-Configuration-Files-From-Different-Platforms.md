@@ -4,11 +4,11 @@ date: 2023-01-30 11:18:23
 tags: Pipeline
 ---
 
-# 一些平台的流水线的代码化配置实例
+## 一些流水线的代码化配置实例
 
 因为最近在做流水线配置代码化的相关功能，因此对参考的一些流水线代码化配置做记录，以便后续参考。
 
-## GitLab CI/CD
+### GitLab CI/CD
 
 Reference: <https://meigit.readthedocs.io/en/latest/gitlab_ci_.gitlab-ci.yml_detail.html>
 
@@ -166,7 +166,7 @@ stop_review_app:
 
 ------
 
-## Gitee Go
+### Gitee Go
 
 Reference: <https://gitee.com/help/articles/4292#article-header0>
 
@@ -207,13 +207,102 @@ stages:                                # 构建阶段配置
 
 ------
 
-## Jenkins
+### Jenkins
 
+Reference: <https://www.jenkins.io/doc/book/pipeline/syntax/>
 
-**待补充**
+```groovy
+@Library('shared-library') _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/your-repo.git']]])
+            }
+        }
+        stage('Build Image') {
+            when {
+                branch 'master'
+            }
+            steps {
+                script {
+                    def imageTag = "${env.BUILD_ID}"
+                    docker.build("my-image:${imageTag}", './docker')
+                }
+            }
+        }
+        stage('Test') {
+            when {
+                allOf {
+                    branch 'master'
+                    expression { env.TEST_APPROVED == "true" }
+                }
+            }
+            steps {
+                script {
+                    testResults = runTests()
+                }
+                post {
+                    success {
+                        archiveArtifacts artifacts: testResults
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            when {
+                allOf {
+                    branch 'master'
+                    expression { env.DEPLOY_APPROVED == "true" }
+                }
+            }
+            steps {
+                script {
+                    deployResults = deploy()
+                }
+                post {
+                    success {
+                        archiveArtifacts artifacts: deployResults
+                    }
+                }
+            }
+        }
+        stage('Approval') {
+            when {
+                branch 'master'
+            }
+            steps {
+                input message: "Do you want to run tests and deploy?", ok: "Yes", submitter: "jenkins-admin"
+            }
+        }
+    }
+
+    post {
+        failure {
+            sendNotification('Failed')
+        }
+        success {
+            sendNotification('Success')
+        }
+    }
+}
+
+```
+
+在这个例子中，流水线使用了一个共享库来简化流水线代码并使其更易于重用。 该库可以包括可以导入到多个流水线中的常用函数和变量。
+
+管道使用`agent any`指令，这意味着流水线将在任何可用的代理机上运行。 这些阶段包括 `Checkout` 阶段、`Build Image` 阶段、`Test` 阶段、`Deploy` 阶段和 `Approval `阶段。 每个阶段都设置了条件，只有在满足特定条件时才会运行。
+
+`Build Image` 阶段使用 `Docker Pipeline` 插件构建 `Docker` 镜像并使用构建 ID 对其进行标记。 `Test`阶段在`TEST_APPROVED`环境变量设置为`true`时运行。 `Deploy` 阶段在`DEPLOY_APPROVED`环境变量设置为`true`时运行。 `Approval`阶段是一个人工步骤，当手动批准后流水线才会进入下一个阶段。
+
+流水线包括一个`post`部分，用于指定在失败或成功时要采取的操作。 在这种情况下，将发送通知以指示流水线结果。
+
 ------
 
-## CDS
+### CDS
 
 Reference:
 
@@ -303,7 +392,7 @@ jobs:
 
 - Workflow configuration file
 
-A CDS workflow file only contains the description of pipelines orchestration, hooks, run conditions, etc.. Consider the following workflow which implements a basic two-stage workflow:
+CDS 工作流文件仅描述管道编排、挂钩、运行条件等。可以参考下面的包含build和deploy两个阶段的工作流：
 
 ```yaml
 name: my-workflow
@@ -312,17 +401,17 @@ workflow:
     pipeline: build
     application: my-application
   deploy:
-    depends_on:
+    depends_on: #前置依赖流水线，仅当build成功后才会触发deploy流水线
     - build
     when:
     - success
     pipeline: deploy
     application: my-application
     environment: my-production
-    one_at_a_time: true
+    one_at_a_time: true #一次只会运行一条
 hooks:
   build:
-  - type: RepositoryWebHook
+  - type: RepositoryWebHook #有当代码提交事件时会触发该工作流
 integrations:
   my-artifactory-integration-name:
     type: artifact_manager
@@ -337,7 +426,7 @@ notifications:
 retention_policy: return run_days_before < 7
 ```
 
-There are two major things to understand: `workflow` and `hooks`. A workflow is a kind of graph starting from a root pipeline, and other pipelines with dependencies. In this example, the `deploy` pipeline will be triggered after the `build` pipeline
+有两个主要的概念：`workflow` 和 `hooks`。 `workflow`是一种从根管道开始的图，包含有其他具有依赖关系的管道。 在上面的示例里，将在`build`管道之后触发`deploy`管道
 
 - Action configuration file
 
@@ -353,7 +442,7 @@ steps:
   - echo "Hello World"
 ```
 
-With a real action `CDS_SonarScanner`: this action contains parameters with default values and some of them are `advanced` parameters. Two plugins are also used in the steps: `plugin-download` and `plugin-archive`
+下面是一个真实的动作 `CDS_SonarScanner`: this action contains parameters with default values and some of them are `advanced` parameters这个动作包括含有默认值的参数，且有一些参数是高级参数。 `plugin-download` 和 `plugin-archive`两个插件也引入了进来。
 
 ```yaml
 version: v1.0
@@ -442,5 +531,3 @@ steps:
   - sonar-scanner -Dsonar.host.url={{.sonarURL}} -Dsonar.login={{.sonarUsername}}
     -Dsonar.password={{.sonarPassword}} -Dsonar.branch={{.sonarBranch}} -Dsonar.scm.disabled=true
 ```
-
-**中文注释待补充**
